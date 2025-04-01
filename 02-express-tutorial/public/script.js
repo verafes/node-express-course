@@ -2,6 +2,9 @@ const productList = document.getElementById('product-list');
 const fetchButton = document.getElementById('fetch-products');
 const searchButton = document.getElementById('search-button');
 const searchInput = document.getElementById('search-input');
+const priceGreaterThanInput = document.getElementById('price-greater-than');
+const priceLessThanInput = document.getElementById('price-less-than');
+const limitInput = document.getElementById('limit');
 
 fetchButton.addEventListener("click", async () => {
     try {
@@ -20,10 +23,26 @@ fetchButton.addEventListener("click", async () => {
 
 searchButton.addEventListener("click", () => {
     const searchQuery = searchInput.value.toLowerCase();
+    const priceGreaterThan = priceGreaterThanInput.value;
+    const priceLessThan = priceLessThanInput.value;
+    const limit = limitInput.value;
 
-    if (!searchQuery) return;
+    let url = `/api/v1/query?`;
 
-    fetch(`/api/v1/products?search=${searchQuery}`)
+    if (searchQuery) {
+        url += `&search=${searchQuery}`;
+    }
+    if (priceGreaterThan) {
+        url += `&priceGreaterThan=${priceGreaterThan}`;
+    }
+    if (priceLessThan) {
+        url += `&priceLessThan=${priceLessThan}`;
+    }
+    if (limit) {
+        url += `&limit=${limit}`;
+    }
+
+    fetch(url)
         .then(response => response.json())
         .then(displayProducts)
         .catch(error => console.error('Search error:', error));

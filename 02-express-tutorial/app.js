@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const PORT = 3000;
 const { products } = require('./data');
 
 app.use(express.static('./public'));
@@ -23,7 +24,6 @@ app.get("/api/v1/products/:productID", (req, res) => {
 });
 
 app.get("/api/v1/query", (req, res, err) => {
-    // console.log(req.query);
     try {
         let response = [...products];
         let {search, limit, priceGreaterThan, priceLessThan} = req.query;
@@ -76,7 +76,6 @@ app.all("*", (req, res) => {
     res.status(404).send("Oops! Page not found");
 });
 
-const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
