@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 3000;
 const { products, people } = require('./data');
@@ -19,6 +20,37 @@ app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
+
+app.use(cookieParser());
+
+const auth = (req, res, next) => {
+    if (req.cookies.name) {
+        req.user = req.cookies.name;
+        next();
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
+
+app.post('/login', (req, res) => {
+    const { name } = req.body;
+
+    if (name) {
+        res.cookie('name', name, {httpOnly: true});
+        res.status(201).json({message: `Hello, ${name}`});
+    } else {
+        return res.status(400).json({ message: 'Please provide a name' });
+    }
+});
+
+app.delete('/logoff', (req, res) => {
+    res.clearCookie('name');
+    res.status(200).json({ message: 'User logged off' });
+});
+
+app.get('/test', auth, (req, res) => {
+    res.status(200).json({ message: `Welcome, ${req.user}` });
+});
 
 app.use('/api/v1/people', peopleRouter);
 

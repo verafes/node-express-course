@@ -16,7 +16,7 @@ const addPerson = (req, res) => {
     res.status(201).json({ success: true, name });
 };
 
-const getPersonById = (req, res) => {
+const getPerson = (req, res) => {
     const id = parseInt(req.params.id);
     const person = people.find(p => p.id === id);
     if (!person) {
@@ -55,7 +55,7 @@ const deletePerson = (req, res) => {
 module.exports = {
     getPeople,
     addPerson,
-    getPersonById,
+    getPerson,
     updatePerson,
     deletePerson,
 };
