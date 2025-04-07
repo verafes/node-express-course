@@ -31,16 +31,15 @@ app.get("/api/v1/products", (req, res) => {
 });
 
 app.get("/api/v1/products/:productID", (req, res) => {
-    // const idToFind = Number(req.params.productID);
     const idToFind = parseInt(req.params.productID, 10);
     const product = products.find((p) => p.id === idToFind);
     if (!product) {
-        return res.status(404).send("Product does not exist");
+        return res.status(404).send("That product was not found");
     }
     return res.json(product);
 });
 
-app.get("/api/v1/query", (req, res, err) => {
+app.get("/api/v1/query", (req, res) => {
     try {
         let response = [...products];
         let {search, limit, priceGreaterThan, priceLessThan} = req.query;
