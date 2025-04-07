@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Express App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+    <h1>Express App</h1>
+    <p>Hello! This is Simple Express App</p>
+    <p>We are fetching some data</p>
+    <button id="fetch-products">Fetch Products</button>
+
+    <label for="search-input"></label><input type="text" id="search-input" placeholder="Search products..." />
+    <label for="price-greater-than">Price Greater Than: </label>
+    <input type="number" id="price-greater-than" placeholder="Price greater than" />
+    <label for="price-less-than">Price Less Than: </label>
+    <input type="number" id="price-less-than" placeholder="Price less than" />
+    <label for="limit">Limit: </label>
+    <input type="number" id="limit" placeholder="Number of products" />
+    <button id="search-button">Search</button>
+
+    <div id="product-list"></div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
