@@ -1,9 +1,26 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const { products } = require('./data');
+const { products, people } = require('./data');
+const peopleRouter = require('./routes/people');
 
+
+const logger = (req, res, next) => {
+    const method = req.method;
+    const url = req.url;
+    const time = new Date().toLocaleString();
+    console.log(`[${time}] ${method} ${url}`);
+    next();
+};
+
+app.use(logger);
+app.use(express.static('./methods-public'));
 app.use(express.static('./public'));
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.json());
+
+app.use('/api/v1/people', peopleRouter);
 
 app.get("/api/v1/test", (req, res) => {
     res.json({ message: "It worked!" });
