@@ -1,0 +1,26 @@
+1. In this lesson, you created a middleware function called asyncWrapper. Why?
+
+The asyncWrapper middleware function is commonly used to handle errors
+in asynchronous route handlers in a clean and reusable way.
+When working with Express and async/await, errors that happen inside async functions
+don't automatically get passed to Express’s error handler.
+Instead of writing a try...catch block inside every route to catch these errors,
+the asyncWrapper takes care of that.
+
+It works by accepting an async function, running it, and if there’s any error,
+it catches that error and passes it to the next() function.
+Express then handles the error using its central error-handling middleware.
+
+This approach keeps route controller code clean, avoids repetition,
+and ensures all async errors are properly caught and managed.
+
+
+2. Complete the code:
+const getTask = asyncWrapper(async (req, res, next) => {
+  const { id: taskID } = req.params;
+  const task = await Task.findOne({ _id: taskID });
+   if (!task) {
+    return next(createCustomError(`Task with id : ${taskID} not found`, 404));
+  }
+  res.status(200).json({ task });
+});
