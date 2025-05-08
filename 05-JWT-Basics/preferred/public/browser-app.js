@@ -39,7 +39,7 @@ formDOM.addEventListener('submit', async (e) => {
     formAlertDOM.textContent = data.msg
 
     formAlertDOM.classList.add('text-success')
-    usernameInputDOM.value = ''
+    nameInputDOM.value = ''
     passwordInputDOM.value = ''
 
     localStorage.setItem('token', data.token)

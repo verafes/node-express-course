@@ -24,10 +24,22 @@ const userSignupSchema = new mongoose.Schema({
         lowercase: true,
         unique: true,
         required: [true, "Email address is required"],
+        validate: {
+            validator: function (v) {
+                return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+            },
+            message: "Please enter a valid email",
+        },
     },
     password: {
         type: String,
         required: [true, "Password is required"],
+        validate: {
+            validator: passwordValidator,
+            message:
+                "Your password isn't strong enough. It must be at least 8 characters long, include one lowercase letter, " +
+                "one uppercase letter, one number, and one special character (!@#?).",
+        },
     },
 });
 

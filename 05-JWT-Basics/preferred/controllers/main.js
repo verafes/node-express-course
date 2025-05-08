@@ -5,22 +5,30 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 const signup = async (req, res) => {
-    const { name, email, password } = req.body;
+    try {
+        const {name, email, password} = req.body;
 
-    if (!name || !password || !email) {
-        throw new BadRequest('All fields (name, email, password) are required', 400);
+        if (!name || !password || !email) {
+            throw new BadRequest('All fields (name, email, password) are required', 400);
+        }
+
+        const existingUser = await User.findOne({email});
+
+        if (existingUser) {
+            throw new BadRequest('Email is already in use');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({name, email, password: hashedPassword});
+
+        res.status(201).json({msg: 'Account successfully created!', newUser});
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const errorMessage = Object.values(error.errors)[0].message;
+            throw new BadRequest(errorMessage);
+        }
+        throw error;
     }
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-        throw new BadRequest('Email is already in use');
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, email, password: hashedPassword });
-
-    res.status(201).json({ msg: 'Account successfully created!', newUser });
 };
 
 const login = async (req, res) => {
@@ -31,10 +39,17 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+
+    if (!user) {
+        // Email doesn't exist
+        throw new Unauthenticated('Invalid email or password. Please try again.');
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        throw new Unauthenticated('Invalid username or password. Please try again.');
+        // Password doesn't match
+        throw new Unauthenticated('Invalid email or password. Please try again.');
     }
 
     const id = user._id;
